@@ -1,0 +1,173 @@
+name: "standard repeat"
+
+matcher:
+  - - from: request_header
+      contains:
+        - POST /test5
+
+from:
+  - Repeater
+  - Scanner
+  - Intruder
+
+repeat:
+  - service:
+      host: "localhost"
+      port: 5000
+      protocol: http
+
+    raw_request:
+      - |
+        GET /test1 HTTP/1.1
+        Host: 127.0.0.1:5000
+        sec-ch-ua: "Not=A?Brand";v="99", "Chromium";v="118"
+        sec-ch-ua-mobile: ?0
+        sec-ch-ua-platform: "Windows"
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Sec-Fetch-Site: none
+        Sec-Fetch-Mode: navigate
+        Sec-Fetch-User: ?1
+        Sec-Fetch-Dest: document
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7
+        Connection: close
+    extractor:
+      - name: token2
+        start: "\"token\": \""
+        end: "\""
+        regex: false
+      - name: deger
+        start: "\"deger\": \""
+        end: "\""
+        regex: false
+  
+  - service:
+      host: "localhost"
+      port: 5000
+      protocol: http
+
+    raw_request:
+      - |
+        POST /test2?token=3f6a13b6-d5d7-4182-823f-8f70f48d1f89 HTTP/1.1
+        Host: 127.0.0.1:5000
+        sec-ch-ua: "Not=A?Brand";v="99", "Chromium";v="118"
+        sec-ch-ua-mobile: ?0
+        sec-ch-ua-platform: "Windows"
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Sec-Fetch-Site: none
+        Sec-Fetch-Mode: navigate
+        Sec-Fetch-User: ?1
+        Sec-Fetch-Dest: document
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7
+        Connection: close
+        Content-Type: application/json
+        Content-Length: 48
+
+        {"deger":"2c917038-ee81-491c-819f-5054c92958ce"}
+
+    extractor:
+      - name: token3
+        start: "\"token\": \""
+        end: "\""
+        regex: false
+
+    replacer:
+      - replace_with: token2
+        start: test2?token=
+        end: " HTTP/1."
+        regex: false
+
+      - replace_with: deger
+        start: "\"deger\":\""
+        end: "\""
+        regex: false
+  - service:
+      host: "localhost"
+      port: 5000
+      protocol: http
+
+    raw_request:
+      - |
+        POST /test3 HTTP/1.1
+        Host: 127.0.0.1:5000
+        sec-ch-ua: "Not=A?Brand";v="99", "Chromium";v="118"
+        sec-ch-ua-mobile: ?0
+        sec-ch-ua-platform: "Windows"
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Sec-Fetch-Site: none
+        Sec-Fetch-Mode: navigate
+        Sec-Fetch-User: ?1
+        Sec-Fetch-Dest: document
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7
+        Connection: close
+        Content-Type: application/json
+        Content-Length: 48
+
+        {"token":"ab18e589-b1bd-4475-b17f-9a00b70822dc"}
+
+    extractor:
+      - name: token4
+        start: "\"token\": \""
+        end: "\""
+        regex: false
+
+    replacer:
+      - replace_with: token3
+        start: "\"token\":\""
+        end: "\""
+        regex: false
+
+  - service:
+      host: "localhost"
+      port: 5000
+      protocol: http
+
+    raw_request:
+      - |
+        POST /test4 HTTP/1.1
+        Host: 127.0.0.1:5000
+        sec-ch-ua: "Not=A?Brand";v="99", "Chromium";v="118"
+        sec-ch-ua-mobile: ?0
+        sec-ch-ua-platform: "Windows"
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Sec-Fetch-Site: none
+        Sec-Fetch-Mode: navigate
+        Sec-Fetch-User: ?1
+        Sec-Fetch-Dest: document
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7
+        Connection: close
+        Content-Type: application/json
+        Content-Length: 48
+
+        {"token":"ab18e589-b1bd-4475-b17f-9a00b70822dc"}
+
+    extractor:
+      - name: token5
+        start: "\"token\": \""
+        end: "\""
+        regex: false
+
+    replacer:
+      - replace_with: token4
+        start: "\"token\":\""
+        end: "\""
+        regex: false
+
+replacer:
+  - replace_with: token5
+    start: "\"token\":\""
+    end: "\""
+    regex: false
+
+continuousupdate: false

@@ -1,0 +1,56 @@
+name: session-update
+
+matcher:
+  request:
+    - - from: request_header
+        contains:
+          - "GET /protected HTTP/1.1"
+  response:
+    - - from: response_header
+        contains:
+         - "HTTP/1.1 401 UNAUTHORIZED"
+
+from:
+  - Repeater
+
+repeat:
+  - raw_request:
+    - |
+      POST /login HTTP/1.1
+      Host: 127.0.0.1:5000
+      sec-ch-ua: "Not=A?Brand";v="99", "Chromium";v="118"
+      sec-ch-ua-mobile: ?0
+      sec-ch-ua-platform: "macOS"
+      Upgrade-Insecure-Requests: 1
+      User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.88 Safari/537.36
+      Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+      Sec-Fetch-Site: none
+      Sec-Fetch-Mode: navigate
+      Sec-Fetch-User: ?1
+      Sec-Fetch-Dest: document
+      Accept-Encoding: gzip, deflate, br
+      Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7
+      Connection: close
+      Content-Type: application/json
+      Content-Length: 41
+
+      {"username":"user","password":"password"}
+
+    service:
+      protocol: http
+      port: 5000
+      host: 127.0.0.1
+  
+    extractor:
+      - name: session
+        start: "Set-Cookie: session="
+        end: ";"
+        regex: false
+
+replacer:
+  - replace_with: session
+    start: "Cookie: session="
+    end: ";"
+    regex: false
+
+continuousupdate: true
